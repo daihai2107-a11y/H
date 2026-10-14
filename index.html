@@ -61,9 +61,10 @@
             if(!code) { alert('Vui lòng nhập mã vận đơn!'); return; }
 
             try {
-                const res = await fetch(API_URL);
+                const res = await fetch(API_URL, { cache: 'no-store' });
                 const orders = await res.json();
-                const order = orders.find(o => o.id.toUpperCase() === code);
+                const list = Array.isArray(orders) ? orders : [];
+                const order = list.find(o => o.id.toUpperCase() === code);
 
                 if(order) {
                     document.getElementById('not-found').classList.add('hidden');
@@ -74,7 +75,7 @@
                     document.getElementById('res-name').innerText = order.receiverName;
                     document.getElementById('res-phone').innerText = order.receiverPhone;
                     document.getElementById('res-address').innerText = order.receiverAddress;
-                    document.getElementById('res-cod').innerText = order.cod.toLocaleString() + ' đ';
+                    document.getElementById('res-cod').innerText = Number(order.cod).toLocaleString() + ' đ';
                     document.getElementById('res-location').innerText = order.location;
                     document.getElementById('res-time').innerText = 'Cập nhật lúc: ' + order.timestamp;
                     
